@@ -83,14 +83,14 @@ module Rockstar
       @mbid = o[:mbid] unless o[:mbid].nil?
 
       options = {:include_info => false}.merge(o)
-      load_info if options[:include_info]
+      load_info(nil, options) if options[:include_info]
     end
 
-    def load_info(xml=nil)
+    def load_info(xml=nil, options = {})
       unless xml
         params = @mbid.blank? ? {:artist => @name} : {:mbid => @mbid}
 
-        doc = self.class.fetch_and_parse("artist.getInfo", params)
+        doc = self.class.fetch_and_parse("artist.getInfo", params.merge(options))
         xml = (doc / :artist).first
       end
 
